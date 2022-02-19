@@ -1,37 +1,16 @@
-## Welcome to GitHub Pages
+# BoockerEasystem
+Current and future market trends force entities to be increasingly competitive. Every entity that wishes to compete in the current market must consider the information and accessibility of it; as one of the most important assets. For this reason, it is necessary for the entity to have the appropriate Information Systems to quickly and efficiently supply information with additional value in a reservation and service system within the reach of its users. In most cases, entities distribute all their information systems in various applications, with the inefficiency and repetition of data that this entails. For this reason, a suitable option may be the acquisition of a Boocker Easystem system.
 
-You can use the [editor on GitHub](https://github.com/Lawkhe/BoockerEasystem/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Requirements for local deployment:
+- MySQL instance running on the system
+- Python 3 installed (versión 3.7 > )
+- Virtual environment (optional, but its use is recommended)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Book and appointemnt for a  locker to used it in that period of reservation. 
+### Order food directly from the restaurant within the application
+### Access all kind of information regarding the university, such as: Bathroom maintnance times and the availability of the library. 
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Lawkhe/BoockerEasystem/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+**Universidad Manuela Beltrán** _Software Architecture_
+1. Diego Torres
+2. Andres Escovar
+3. Juan Hernandez
