@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block head %}
+<!-- ESTILOS DEL CSS -->
+<link rel="stylesheet" href="{% static 'vendors/jvectormap/jquery-jvectormap.css' %}">
+{% endblock %}
+{% block main %} 
+<!-- TODO DEL HTML -->
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+  <div class="mdc-card">
+    <div class="d-flex justify-content-between">
+      <h4 class="card-title mb-0">Bienvenidos a la <b>Universidad Manuela Beltrán</b></h4>
+    </div>
+    <div class="d-block d-sm-flex justify-content-between align-items-center">
+        <h5 class="card-sub-title mb-2 mb-sm-0">Una Institución de Educación Superior con 45 años de historia, 
+          comprometida con la formación de profesionales íntegros que aportan al desarrollo sostenible de nuestro país.</h5>
+    </div>
+    <div class="mdc-layout-grid__inner mt-2">
+      <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4 mdc-layout-grid__cell--span-8-tablet">
+          <br>
+          <br>
+          <div class="table-responsive">
+            <table class="table dashboard-table">
+              <tbody>
+                <tr>
+                  <td>
+                    <span class="flag-icon-container"><i class="flag-icon flag-icon-us mr-2"></i></span>Reserva</td>
+                  <td>Reserva de locker's en la institución.</td>
+                </tr>
+                <tr>
+                  <td> <span class="flag-icon-container"><i class="flag-icon flag-icon-ph mr-2"></i></span>Restaurante</td>
+                  <td>Revisa y pide tu comida favorita <br>mientras estas en la institución.</td>
+                </tr>
+                <tr>
+                  <td> <span class="flag-icon-container"><i class="flag-icon flag-icon-gb mr-2"></i></span>Baños y Otros</td>
+                  <td>Ve al baño u otros lugares mas cercanos <br>y en funcionamiento que tengamos.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+      <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-8 mdc-layout-grid__cell--span-8-tablet"> 
+        <div id="revenue-map" class="revenue-world-map"></div>
+      </div>
+    </div>
+  </div> 
+</div>
+
+
+
+
+
+{% endblock %}
+{% block js %} 
+<!-- CODIGO JAVASCRIPT -->
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+{% endblock %}

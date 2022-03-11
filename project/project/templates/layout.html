@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>BoockerEasystem</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- Layout styles -->
+  <link rel="stylesheet" href="{% static 'css/demo/style.css' %}">
+  <!-- End layout styles -->
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+
+  {% block head %} {% endblock %}
+</head>
+<body>
+<script src="{% static 'js/preloader.js' %}"></script>
+  <div class="body-wrapper">
+    <!-- partial:../../partials/_sidebar.html -->
+    <aside class="mdc-drawer mdc-drawer--dismissible mdc-drawer--open">
+      <div class="mdc-drawer__header">
+        <a href="/index/" class="brand-logo">
+          <img src="{% static 'images/logo.svg' %}" alt="logo">
+        </a>
+      </div>
+      <div class="mdc-drawer__content">
+        <div class="mdc-list-group">
+          <nav class="mdc-list mdc-drawer-menu">
+            <div class="mdc-list-item mdc-drawer-item">
+              <a class="mdc-drawer-link" id="option_index" href="/index/">
+                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">home</i>
+                Inicio
+              </a>
+            </div>
+            <!-- <div class="mdc-list-item mdc-drawer-item">
+              <a class="mdc-drawer-link" id="option_documentview" href="/document/view/">
+                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">description</i>
+                Servicios
+              </a>
+            </div> -->
+          </nav>
+        </div>
+        <div class="profile-actions">
+          <a href="/logout/">Cerrar sesión</a>
+        </div>
+      </div>
+    </aside>
+    <!-- partial -->
+
+    <div class="main-wrapper mdc-drawer-app-content">
+      <!-- partial:../../partials/_navbar.html -->
+      <header class="mdc-top-app-bar">
+        <div class="mdc-top-app-bar__row">
+          <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+            <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button sidebar-toggler">menu</button>
+          </div>
+          <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end mdc-top-app-bar__section-right">
+            <div class="menu-button-container menu-profile d-none d-md-block">
+              <button class="mdc-button mdc-menu-button">
+                <span class="d-flex align-items-center">
+                  <span class="figure">
+                    <img src="{% static 'images/faces/face1.jpg' %}" alt="user" class="user">
+                  </span>
+                  <span class="user-name">{{ session.name }}</span>
+                </span>
+              </button>
+              <div class="mdc-menu mdc-menu-surface" tabindex="-1">
+                <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                  <li class="mdc-list-item" role="menuitem">
+                    <div class="item-thumbnail item-thumbnail-icon-only">
+                      <i class="mdi mdi-account-edit-outline text-primary"></i>
+                    </div>
+                    <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                      <h6 class="item-subject font-weight-normal">Editar Perfil</h6>
+                    </div>
+                  </li>
+                  <li class="mdc-list-item" role="menuitem">
+                    <div class="item-thumbnail item-thumbnail-icon-only">
+                      <i class="mdi mdi-settings-outline text-primary"></i>                      
+                    </div>
+                    <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                      <a href="/logout/">
+                        <h6 class="item-subject font-weight-normal">Cerrar sesión</h6>
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- partial -->
+      <div class="page-wrapper mdc-toolbar-fixed-adjust">
+        <main class="content-wrapper">
+          {% block main %} {% endblock %}
+        </main>
+        <!-- partial:../../partials/_footer.html -->
+        <footer>
+          <div class="mdc-layout-grid">
+            <div class="mdc-layout-grid__inner">
+              <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                <span class="text-center text-sm-left d-block d-sm-inline-block tx-14">Copyright © <a href="https://www.bootstrapdash.com/" target="_blank">BoockerEasystem </a>2022</span>
+              </div>
+              <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop d-flex justify-content-end">
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center tx-14">Gratis <a href="https://www.bootstrapdash.com/material-design-dashboard/" target="_blank"></a></span>
+              </div>
+            </div>
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
+    </div>
+  </div>
+  <!-- plugins:js -->
+  <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="{% static 'js/material.js' %}"></script>
+  <script src="{% static 'js/misc.js' %}"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <!-- End custom js for this page-->
+  <script>
+    $(document).ready(function() {
+      var URLactual = window.location.pathname.trim();
+      var opcion = "option_" + URLactual.replace(/\//g, "");
+      if (opcion != "option_index") {
+        opcion = 'option_documentview'
+      }
+      console.log(opcion);
+      $('#' + opcion).addClass('active');
+    });
+  </script>
+   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
+    var status = '{{ status }}';
+    if (status == 'fail') {
+      swal({
+        title: "Error",
+        text: '{{ message }}',
+        icon: "warning",
+      });
+    }
+  </script>
+  {% block js %} {% endblock %}
+</body>
+</html>
