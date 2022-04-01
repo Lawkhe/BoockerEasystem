@@ -37,6 +37,10 @@
                 <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">home</i>
                 Inicio
               </a>
+              <a class="mdc-drawer-link" id="option_plans" href="/plans/">
+                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">map</i>
+                Sitios de Interés
+              </a>
             </div>
             <!-- <div class="mdc-list-item mdc-drawer-item">
               <a class="mdc-drawer-link" id="option_documentview" href="/document/view/">
@@ -133,9 +137,9 @@
     $(document).ready(function() {
       var URLactual = window.location.pathname.trim();
       var opcion = "option_" + URLactual.replace(/\//g, "");
-      if (opcion != "option_index") {
-        opcion = 'option_documentview'
-      }
+      // if (opcion != "option_index") {
+      //   opcion = 'option_documentview'
+      // }
       console.log(opcion);
       $('#' + opcion).addClass('active');
     });

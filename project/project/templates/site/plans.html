@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block head %}
+<!-- ESTILOS DEL CSS -->
+<link rel="stylesheet" href="{% static 'vendors/jvectormap/jquery-jvectormap.css' %}">
+<link rel="stylesheet" href="{% static 'vendors/map/style.css' %}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+{% endblock %}
+{% block main %} 
+<!-- TODO DEL HTML -->
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+  <div class="mdc-card">
+    <div class="d-flex justify-content-between">
+      <h4 class="card-title mb-0">Bienvenidos a la <b>Universidad Manuela Beltrán</b></h4>
+    </div>
+    <div class="d-block d-sm-flex justify-content-between align-items-center">
+        <h5 class="card-sub-title mb-2 mb-sm-0">Una Institución de Educación Superior con 45 años de historia, 
+          comprometida con la formación de profesionales íntegros que aportan al desarrollo sostenible de nuestro país.</h5>
+    </div>
+    <div class="d-block d-sm-flex justify-content-between align-items-center mt-2">
+      <div class="dx-viewport">
+
+
+
+
+
+
+        <div class="map-build">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="70 0 721.8 426.7" style="enable-background:new 0 0 721.8 426.7;" xml:space="preserve">
+  
+            <polygon id="shop1map" class="st0" points="251.2,371.8 174.1,327.3 167.2,331.3 167.2,393.3 190.6,406.8 	" />
+            <polygon id="shop2map" class="st0" points="226.1,355.3 255.5,338.3 205.3,309.3 175.8,326.3 	" />
+            <polygon id="shop3map" class="st0" points="252.9,370.8 282.3,353.8 257.2,339.3 227.8,356.3 	" />
+            <polygon id="shop4map" class="st0" points="364.6,274.3 430.4,236.3 381.1,207.8 315.3,245.8 	" />
+            <polygon id="shop5map" class="st0" points="392.3,290.3 458.2,252.3 432.2,237.3 366.4,275.3 	" />
+            <polygon id="shop6map" class="st0" points="459.9,251.3 499.7,228.3 422.6,183.8 382.8,206.8 	" />
+            <polygon id="shop7map" class="st0" points="501.5,227.3 550,199.3 498,169.3 472.9,154.8 449.5,168.3 424.4,182.8 	" />
+            <polygon id="shop8map" class="st0" points="551.7,198.3 629.6,153.3 567.4,117.2 539.6,116.3 474.6,153.8 	" />
+            <polygon id="shop9map" class="st0" points="660.9,73.3 566.4,18.8 552.6,26.8 552.6,84.8 596.8,110.3 	" />
+            <polygon id="shop10map" class="st0" points="650.4,141.3 714.5,104.3 662.5,74.3 598.4,111.3 	" />
+            <polygon class="st2" points="714.5,115.7 650.4,152.7 650.4,141.3 714.5,104.3 	" />
+            <polygon class="st2" points="629.6,164.6 392.3,301.6 392.3,290.2 629.6,153.2 	" />
+            <polygon class="st2" points="282.3,365.3 190.6,418.1 190.6,406.7 282.3,353.9 	" />
+            <polygon class="st1" points="552.5,84.8 650.4,141.3 650.4,152.7 552.5,96.2 	" />
+            <polygon class="st1" points="315.3,245.7 392.3,290.2 392.3,301.6 315.3,257.1 	" />
+            <polygon class="st1" points="167.2,393.2 190.6,406.7 190.6,418.1 167.2,404.6 	" />
+          </svg>
+          
+          <h1>Sitios de Interés</h1>
+          <div class="allshop">
+            <div>
+              <p id="shop1">Restaurante</p>
+              <!-- <p id="shop2">Bistro valvet</p> -->
+              <p id="shop4">Cafeteria</p>
+              <!-- <p id="shop5">Hit Footwear</p> -->
+            </div>
+            <div>
+              <p id="shop6">Casilleros</p>
+              <p id="shop9">Baño</p>
+            </div>
+            <div>
+              <p id="shop7">Baño</p>
+              <p id="shop3">Baño</p>
+              <!-- <p id="shop8">Gally Hicks</p> -->
+            </div>
+              <p id="shop10">Biblioteca</p>
+            <div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+  </div> 
+</div>
+
+
+<div id="ex1" class="modal">
+  <img class="img_site" src="{% static 'images/sites/restaurante_1.jpg' %}" alt="">
+  <p>Cafeteria</p>
+  <a href="#" rel="modal:close">Cerrar</a>
+</div>
+
+
+{% endblock %}
+{% block js %} 
+<!-- CODIGO JAVASCRIPT -->
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+<script src="{% static 'vendors/map/script.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#shop4, #shop4map').click(function(){
+      console.log('asdasdadd');
+      $('#ex1').modal();
+    });
+  });
+</script>
+
+{% endblock %}

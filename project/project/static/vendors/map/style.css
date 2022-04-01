@@ -1,0 +1,89 @@
+:root {
+  --basecolor: 180, 60%;
+  --colortop: hsl(var(--basecolor), 40%);
+  --colorleft: hsl(var(--basecolor), 35%);
+  --colorright: hsl(var(--basecolor), 30%);
+
+  --highligthcolor: #C42E2E;
+  /* --background: hsl(40, 30%, 81%); */
+  --background: #352661;
+}
+
+.dx-viewport {
+  width: 100%;
+}
+
+.map-build {
+  background: var(--background);
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  color: var(--colortop);
+}
+
+.st0 {
+  fill: var(--colortop);
+}
+
+.st1 {
+  fill: var(--colorleft);
+}
+
+.st2 {
+  fill: var(--colorright);
+  cursor: pointer;
+}
+
+svg {
+  width: 700px;
+  margin: 0 auto;
+  animation: fadeIn;
+  animation-duration: 1s;
+}
+
+h1 {
+  color: white;
+  animation: fadeIn;
+  animation-duration: 1s;
+  margin: 10px;
+}
+
+.allshop {
+  display: grid;
+  width: 700px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 10px;
+  margin: 0 auto;
+  animation: fadeIn;
+  animation-duration: 1s;
+}
+
+.allshop p {
+  background-color: var(--colortop);
+  padding: 3px;
+  margin: 10px 0px;
+  transition: background-color 0.2s ease-out;
+  color: white;
+  font-size: 0.9em;
+  font-weight: 700;
+  border-radius: 2px;
+}
+
+svg polygon {
+  transition: fill 0.2s ease-out;
+}
+
+@media only screen and (max-width: 786px) {
+  .allshop {
+    width: 100%;
+    display: block;
+  }
+
+  svg {
+    width: 100%;
+  }
+}
+
+.img_site {
+  width: 100%;
+}

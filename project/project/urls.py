@@ -15,12 +15,14 @@ Including another URLconf
 """
 # from django.contrib import admin
 from django.urls import path
-from project.controllers import site, start
+from project.controllers import site, start, place
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', site.login),
     path('login/', site.login),
     path('index/', site.index),
+    path('plans/', site.plans),
     path('start/run/', start.run),
+    path('place/<int:pk>/', place.detail),
 ]
