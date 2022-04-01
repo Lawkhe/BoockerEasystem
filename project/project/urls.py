@@ -25,4 +25,5 @@ urlpatterns = [
     path('plans/', site.plans),
     path('start/run/', start.run),
     path('place/<int:pk>/', place.detail),
+    path('get_place/<int:pk>/', place.get_data),
 ]
