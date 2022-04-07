@@ -3,10 +3,7 @@ from django.http import JsonResponse
 from project.models import (
     Place,
     Image_Place,
-    Type_Service,
-    Service,
     Service_Place,
-    Line_Day,
     Schedule_Service,
 )
 

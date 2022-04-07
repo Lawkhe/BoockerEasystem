@@ -33,14 +33,31 @@
         <div class="mdc-list-group">
           <nav class="mdc-list mdc-drawer-menu">
             <div class="mdc-list-item mdc-drawer-item">
+              <a style="color: white;">
+                {{ session.rol_name }}
+              </a>
+              <br>
+              <br>
               <a class="mdc-drawer-link" id="option_index" href="/index/">
                 <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">home</i>
                 Inicio
               </a>
-              <a class="mdc-drawer-link" id="option_plans" href="/plans/">
-                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">map</i>
-                Sitios de Interés
-              </a>
+              {% if session.rol == 1 %}
+                <a class="mdc-drawer-link" id="option_manage" href="/manage/">
+                  <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">people</i>
+                  Encargados
+                </a>
+              {% elif session.rol == 2 %}
+                <a class="mdc-drawer-link" id="option_place" href="/place/">
+                  <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">map</i>
+                  Sitio
+                </a>
+              {% elif session.rol == 3 %}
+                <a class="mdc-drawer-link" id="option_plans" href="/plans/">
+                  <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">map</i>
+                  Sitios de Interés
+                </a>
+              {% endif %}
             </div>
             <!-- <div class="mdc-list-item mdc-drawer-item">
               <a class="mdc-drawer-link" id="option_documentview" href="/document/view/">

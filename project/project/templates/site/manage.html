@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block head %}
+<!-- ESTILOS DEL CSS -->
+<link rel="stylesheet" href="{% static 'vendors/jvectormap/jquery-jvectormap.css' %}">
+<link rel="stylesheet" href="{% static 'vendors/map/style.css' %}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+{% endblock %}
+{% block main %} 
+<!-- TODO DEL HTML -->
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+  <div class="mdc-card">
+    
+    <div class="d-block d-sm-flex justify-content-between align-items-center mt-2">
+      <div class="dx-viewport">
+
+
+        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+          <div class="mdc-card p-0">
+            <h6 class="card-title card-padding pb-0">Lista de encargados</h6>
+            <br>
+            <!-- <button class="mdc-button mdc-button--raised filled-button--secondary">
+              Agregar
+            </button> -->
+            <button class="mdc-button mdc-button--outlined outlined-button--secondary">
+              Agregar
+            </button>
+            <br>
+            <div class="table-responsive">
+              <table class="table table-hoverable">
+                <thead>
+                  <tr>
+                    <th class="text-left">Nombres</th>
+                    <th>Correo</th>
+                    <th>Telefono</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-left">Diego Torres</td>
+                    <td>20diegotorres01@gmail.com</td>
+                    <td>3006884125</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div> 
+</div>
+
+
+{% endblock %}
+{% block js %} 
+<!-- CODIGO JAVASCRIPT -->
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+{% endblock %}

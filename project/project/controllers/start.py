@@ -8,6 +8,7 @@ from project.models import (
     Service_Place,
     Line_Day,
     Schedule_Service,
+    Rol,
 )
 from django.conf import settings
 
@@ -19,6 +20,33 @@ def run(request):
         'email': 'josecheche14@gmail.com',
     }
     response['session'] = request.session['user']
+
+    roles = [
+        {
+            'name': 'Administrador',
+            'description': 'Crea y asigna a los encargados a cada sitio de interes.',
+        },
+        {
+            'name': 'Encargado',
+            'description': 'Administra los servicios del sitio de interes asignado.',
+        },
+        {
+            'name': 'Usuario',
+            'description': 'Puede navegar, ver los sitios de interes y utilizar los servicios.',
+        },
+    ]
+
+    for rol in roles:
+        try:
+            rol_val = Rol.objects.get(name=rol['name'])
+            rol_val.description = rol['description']
+            rol_val.save()
+        except Rol.DoesNotExist:
+            rol_val = Rol()
+            rol_val.name = rol['name']
+            rol_val.description = rol['description']
+            rol_val.save()
+
 
     type_places = [
         {
