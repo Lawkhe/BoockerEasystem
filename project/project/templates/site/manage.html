@@ -25,7 +25,7 @@
             <!-- <button class="mdc-button mdc-button--raised filled-button--secondary">
               Agregar
             </button> -->
-            <button class="mdc-button mdc-button--outlined outlined-button--secondary">
+            <button id="btn_create" class="mdc-button mdc-button--outlined outlined-button--secondary">
               Agregar
             </button>
             <br>
@@ -36,14 +36,26 @@
                     <th class="text-left">Nombres</th>
                     <th>Correo</th>
                     <th>Telefono</th>
+                    <th>Sitio</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td class="text-left">Diego Torres</td>
-                    <td>20diegotorres01@gmail.com</td>
-                    <td>3006884125</td>
-                  </tr>
+                  {% for manage in managers %}
+                    <tr>
+                      <td class="text-left">{{ manage.name }}</td>
+                      <td>{{ manage.email }}</td>
+                      <td>{{ manage.phone }}</td>
+                      <td>{{ manage.user_place__place__name }}</td>
+                      <td>
+                        <button manage_name="{{ manage.name }}" manage_identification="{{ manage.identification }}" manage_email="{{ manage.email }}"
+                          manage_password="{{ manage.password }}" manage_phone="{{ manage.phone }}" manage_id="{{ manage.id }}"
+                          manage_place="{{ manage.user_place__place_id }}" class="mdc-button text-button--secondary edit-manage">
+                          <i class="material-icons mdc-button__icon">edit</i>
+                        </button>
+                      </td>
+                    </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>
@@ -57,6 +69,81 @@
   </div> 
 </div>
 
+<div id="ex1" class="modal">
+  <div class="mdc-card">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop">
+            <h3>Crear Encargado</h3>
+          </div>
+          <div style="display: none;" class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop">
+            <div class="mdc-text-field w-100">
+              <input name="id" type="text" class="mdc-text-field__input" id="id_manage">
+              <div class="mdc-line-ripple"></div>
+              <label for="text-field-hero-input" class="mdc-floating-label">Id</label>
+            </div>
+          </div>
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop">
+            <div class="mdc-text-field w-100">
+              <input name="name" type="text" maxlength="40" minlength="3" autocomplete="off" class="mdc-text-field__input" id="name_manage" required>
+              <div class="mdc-line-ripple"></div>
+              <label for="text-field-hero-input" class="mdc-floating-label">Nombre y Apellido</label>
+            </div>
+          </div>
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+            <div class="mdc-text-field w-100">
+              <input name="identification" type="number" autocomplete="off" class="mdc-text-field__input" id="identification_manage" required>
+              <div class="mdc-line-ripple"></div>
+              <label for="text-field-hero-input" class="mdc-floating-label">Identificación</label>
+            </div>
+          </div>
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+            <div class="mdc-text-field w-100">
+              <input name="phone" type="number" min="1000000000" max="9999999999" autocomplete="off" class="mdc-text-field__input" id="phone_manage" required>
+              <div class="mdc-line-ripple"></div>
+              <label for="text-field-hero-input" class="mdc-floating-label">Teléfono</label>
+            </div>
+          </div>
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+            <div class="mdc-text-field w-100">
+              <input name="email" type="email" autocomplete="off" class="mdc-text-field__input" id="email_manage" required>
+              <div class="mdc-line-ripple"></div>
+              <label for="text-field-hero-input" class="mdc-floating-label">Correo</label>
+            </div>
+          </div>
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+            <div class="mdc-text-field w-100">
+              <input name="password" class="mdc-text-field__input" type="password" autocomplete="off" id="password_manage" required>
+              <div class="mdc-line-ripple"></div>
+              <label for="text-field-hero-input" class="mdc-floating-label">Contraseña</label>
+            </div>
+          </div>
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+            <div class="mdc-text-field w-100">
+              <select name="place" class="mdc-text-field__input" style="height: 110%;" id="place_manage" required>
+                <option value="1">Restaurante</option>
+                <option value="2">Pasillo</option>
+                <option value="3">Baño</option>
+                <option value="4">Cafeteria</option>
+                <option value="5">Biblioteca</option>
+              </select>
+              <div class="mdc-line-ripple"></div>
+              <label for="text-field-hero-input" class="mdc-floating-label">Sitio de Interes</label>
+            </div>
+          </div>
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+            <button type="submit" class="mdc-button mdc-button--raised w-100">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <br>
+  <a href="#" rel="modal:close">Cerrar</a>
+</div>
+
 
 {% endblock %}
 {% block js %} 
@@ -64,5 +151,50 @@
 <script src="{% static 'vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
 <script src="{% static 'vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
 <script src="{% static 'js/dashboard.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#btn_create').click(function(){
+      $('#id_manage').val('');
+      $('#name_manage').val('');
+      $('#identification_manage').val('');
+      $('#email_manage').val('');
+      $('#password_manage').val('');
+      $('#phone_manage').val('');
+      $('#ex1').modal();
+    });
+
+    
+    $('.edit-manage').click(function(){
+      var id = $(this).attr('manage_id');
+      var name = $(this).attr('manage_name');
+      var identification = $(this).attr('manage_identification');
+      var email = $(this).attr('manage_email');
+      var password = $(this).attr('manage_password');
+      var phone = $(this).attr('manage_phone');
+      var place = $(this).attr('manage_place');
+
+      $('#id_manage').val(id);
+      $('#name_manage').val(name);
+      $('#identification_manage').val(identification);
+      $('#email_manage').val(email);
+      $('#password_manage').val(password);
+      $('#phone_manage').val(phone);
+      $('#place_manage').val(place);
+
+      $('#ex1').modal();
+
+      // console.log('edit');
+      // console.log(id);
+      // console.log(name);
+      // console.log(identification);
+      // console.log(email);
+      // console.log(password);
+      // console.log(phone);
+
+    });
+  });
+</script>
 
 {% endblock %}

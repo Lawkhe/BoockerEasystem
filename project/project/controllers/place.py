@@ -9,11 +9,11 @@ from project.models import (
 
 def detail(request, pk):
     response = {}
-    request.session['user'] = {
-        'id': 0,
-        'name': 'Desarrollador',
-        'email': 'josecheche14@gmail.com',
-    }
+    # request.session['user'] = {
+    #     'id': 0,
+    #     'name': 'Desarrollador',
+    #     'email': 'josecheche14@gmail.com',
+    # }
     response['session'] = request.session['user']
     
     try:

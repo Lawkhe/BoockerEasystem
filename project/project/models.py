@@ -53,6 +53,18 @@ class Image_Place(models.Model):
     def __str__(self):
         return self.location
 
+class User_Place(models.Model):
+    user_college = models.ForeignKey(
+        User_College, on_delete=models.CASCADE
+    )
+    place = models.ForeignKey(
+        Place, on_delete=models.CASCADE
+    )
+    state = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.id
+
 class Type_Service(models.Model):
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=100)
@@ -119,23 +131,31 @@ class Catalog_Service(models.Model):
     def __str__(self):
         return self.name
 
-class Order_Catalog(models.Model):
-    catalog_service = models.ForeignKey(
-        Catalog_Service, on_delete=models.CASCADE
-    )
+class Order_Service(models.Model):
     user_college = models.ForeignKey(
         User_College, on_delete=models.CASCADE
     )
-    quantity = models.IntegerField()
     date = models.DateField(auto_now_add=True)
     status = models.IntegerField()
 
     def __str__(self):
         return self.date
 
-class Traceability_Order_Catalog(models.Model):
-    order_catalog = models.ForeignKey(
-        Order_Catalog, on_delete=models.CASCADE
+class Order_Catalog(models.Model):
+    order_service = models.ForeignKey(
+        Order_Service, on_delete=models.CASCADE, null=True
+    )
+    catalog_service = models.ForeignKey(
+        Catalog_Service, on_delete=models.CASCADE
+    )
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return self.id
+
+class Traceability_Order_Service(models.Model):
+    order_service = models.ForeignKey(
+        Order_Service, on_delete=models.CASCADE, null=True
     )
     date_time = models.DateTimeField(auto_now_add=True)
     action = models.CharField(max_length=30)

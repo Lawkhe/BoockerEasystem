@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.decorators.cache import never_cache
 from django.http import HttpResponseRedirect
 from project.encrypt import Encrypt
-from project.models import User_College
+from project.models import User_College, User_Place
 
 @never_cache
 def login(request):
@@ -94,9 +94,86 @@ def plans(request):
 
 def manage(request):
     if 'user' in request.session:
-        return render(request, 'site/manage.html', context={'session': request.session['user']})
-    else:
-        return HttpResponseRedirect('/login/')
+        if request.session['user']['rol'] == 1:
+            response = {}
+            if request.method == "POST":
+                data = request.POST
+                print(data['name'])
+
+                if 'name' in data and 'identification' in data and 'phone' in data and 'email' in data and 'password' in data and 'place' in data:
+                    if data['name'] != '' and data['identification'] != '' and data['phone'] != '' and data['email'] != '' and data['password'] != '' and data['place'] != '':
+                        name = data['name']
+                        identification = data['identification']
+                        phone = data['phone']
+                        email = data['email']
+                        password = data['password']
+                        place = data['place']
+                        password_encrypt = Encrypt().encrypt_code(password)
+
+                        print('data:::::::::::::::::::')
+                        print(data)
+
+                        if User_College.objects.filter(email=email) and data['id'] == '':
+                            response['status'] = 'fail'
+                            response['message'] = 'El usuario ya existe'
+                        else:
+                            manage_process = True
+                            if data['id'] != '':
+                                try:
+                                    manage_val = User_College.objects.get(id=data['id'])
+                                    manage_val.name = name
+                                    manage_val.identification = identification
+                                    manage_val.email = email
+                                    manage_val.phone = phone
+                                    if password != manage_val.password:
+                                        manage_val.password = password_encrypt
+                                    manage_val.save()
+                                except User_College.DoesNotExist:
+                                    manage_process = False
+                                    response['status'] = 'fail'
+                                    response['message'] = 'El usuario no existe'
+                            else:
+                                manage_val = User_College()
+                                manage_val.name = name
+                                manage_val.identification = identification
+                                manage_val.email = email
+                                manage_val.phone = phone
+                                manage_val.rol_id = 2
+                                manage_val.password = password_encrypt
+                                manage_val.save()
+                                response['status'] = 'success'
+
+                            if manage_process:
+                                try:
+                                    user_place_val = User_Place.objects.get(user_college=manage_val)
+                                    user_place_val.place_id = place
+                                    user_place_val.state = True
+                                    user_place_val.save()
+                                except User_Place.DoesNotExist:
+                                    user_place_val = User_Place()
+                                    user_place_val.user_college = manage_val
+                                    user_place_val.place_id = place
+                                    user_place_val.save()
+
+
+            manage_list = User_College.objects.filter(
+                rol_id=2
+            ).select_related(
+                'user_place'
+            ).values(
+                'id',
+                'name',
+                'identification',
+                'email',
+                'phone',
+                'password',
+                'user_place__place_id',
+                'user_place__place__name',
+            )
+            response['session'] = request.session['user']
+            response['managers'] = manage_list
+            return render(request, 'site/manage.html', context=response)
+    return HttpResponseRedirect('/login/')
 
 def place(request):
     if 'user' in request.session:
