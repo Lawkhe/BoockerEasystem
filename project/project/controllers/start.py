@@ -265,10 +265,10 @@ def run(request):
                             schedule_service_val.state = True
                             schedule_service_val.save()
                         except Schedule_Service.DoesNotExist:
-                            service_place_val = Schedule_Service()
-                            service_place_val.service = service_val
-                            service_place_val.line_day = line_day_val
-                            service_place_val.save()
+                            schedule_service_val = Schedule_Service()
+                            schedule_service_val.service = service_val
+                            schedule_service_val.line_day = line_day_val
+                            schedule_service_val.save()
                 except Type_Service.DoesNotExist:
                     pass
         except Type_Place.DoesNotExist:

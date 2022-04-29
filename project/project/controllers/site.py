@@ -155,6 +155,8 @@ def manage(request):
                                     user_place_val.place_id = place
                                     user_place_val.save()
 
+                            return HttpResponseRedirect('/manage/')
+
 
             manage_list = User_College.objects.filter(
                 rol_id=2
@@ -173,10 +175,4 @@ def manage(request):
             response['session'] = request.session['user']
             response['managers'] = manage_list
             return render(request, 'site/manage.html', context=response)
-    return HttpResponseRedirect('/login/')
-
-def place(request):
-    if 'user' in request.session:
-        return render(request, 'site/place.html', context={'session': request.session['user']})
-    else:
-        return HttpResponseRedirect('/login/')
+    return HttpResponseRedirect('/logout/')

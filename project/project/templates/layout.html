@@ -157,7 +157,13 @@
       // if (opcion != "option_index") {
       //   opcion = 'option_documentview'
       // }
-      console.log(opcion);
+      // console.log(opcion.replace(/[0-9]+/g, ""));
+
+      if (opcion.replace(/[0-9]+/g, "") == "option_service" ) {
+        opcion = 'option_place';
+      }
+
+      // console.log(opcion);
       $('#' + opcion).addClass('active');
     });
   </script>

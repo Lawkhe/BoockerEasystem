@@ -75,7 +75,7 @@
       {% csrf_token %}
       <div class="mdc-layout-grid">
         <div class="mdc-layout-grid__inner">
-          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop">
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-12-table">
             <h3>Crear Encargado</h3>
           </div>
           <div style="display: none;" class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop">
@@ -185,14 +185,12 @@
 
       $('#ex1').modal();
 
-      // console.log('edit');
-      // console.log(id);
-      // console.log(name);
-      // console.log(identification);
-      // console.log(email);
-      // console.log(password);
-      // console.log(phone);
-
+      $('#identification_manage').focus();
+      $('#email_manage').focus();
+      $('#password_manage').focus();
+      $('#phone_manage').focus();
+      $('#place_manage').focus();
+      $('#name_manage').focus();
     });
   });
 </script>

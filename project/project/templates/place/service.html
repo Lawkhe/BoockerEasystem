@@ -1,0 +1,136 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block head %}
+<!-- ESTILOS DEL CSS -->
+<link rel="stylesheet" href="{% static 'vendors/jvectormap/jquery-jvectormap.css' %}">
+<link rel="stylesheet" href="{% static 'vendors/map/style.css' %}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+{% endblock %}
+{% block main %} 
+<!-- TODO DEL HTML -->
+
+<div class="page-wrapper mdc-toolbar-fixed-adjust">
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+        <div class="mdc-card">
+          <div class="d-block d-sm-flex justify-content-between align-items-center mt-2">
+            <div class="dx-viewport">
+              <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+                <div class="mdc-card p-0">
+                  <h6 class="card-title card-padding pb-0">{{ data.name }}</h6>
+                  <h5 class="card-padding font-weight-light pb-2 mb-1">{{ data.description }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> 
+      </div>
+    </div>
+  </div> 
+</div>
+
+
+<div class="page-wrapper mdc-toolbar-fixed-adjust">
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-tablet">
+        <div class="mdc-card info-card info-card--success">
+          <div class="card-inner">
+            <h5 class="card-title">Producto 1</h5>
+            <h5 class="font-weight-light pb-2 mb-1 border-bottom">$12.500</h5>
+          </div>
+        </div>
+      </div>
+      <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-tablet">
+        <div class="mdc-card info-card info-card--success">
+          <div class="card-inner">
+            <h5 class="card-title">Producto 2</h5>
+            <h5 class="font-weight-light pb-2 mb-1 border-bottom">$8.000</h5>
+          </div>
+        </div>
+      </div>
+      <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-tablet">
+        <div class="mdc-card info-card info-card--success">
+          <div class="card-inner">
+            <h5 class="card-title">Producto 3</h5>
+            <h5 class="font-weight-light pb-2 mb-1 border-bottom">$14.000</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrapper mdc-toolbar-fixed-adjust">
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-12-tablet">
+        <div class="table-responsive">
+          <div class="mdc-card info-card info-card--success">
+            <div class="card-inner">
+              <h5 class="card-title">Pendientes Hoy</h5>
+            </div>
+            <table class="table table-hoverable">
+              <thead>
+                <tr>
+                  <th class="text-left">Usuario</th>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js %} 
+<!-- CODIGO JAVASCRIPT -->
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('.btn_create').click(function(){
+      var service = $(this).attr('service_id');
+      $('#id_service').val(service);
+
+      $('#id_schedule').val('');
+      $('#day_schedule').val('');
+      $('#start_schedule').val('');
+      $('#end_schedule').val('');
+      $('#ex1').modal();
+    });
+
+    $('.edit-schedule').click(function(){
+      var id = $(this).attr('schedule_id');
+      var day = $(this).attr('schedule_day');
+      var start = $(this).attr('schedule_start');
+      var end = $(this).attr('schedule_end');
+      var service = $(this).attr('service_id');
+
+      $('#id_schedule').val(id);
+      $('#day_schedule').val(day);
+      $('#start_schedule').val(start);
+      $('#end_schedule').val(end);
+      $('#id_service').val(service);
+      $('#ex1').modal();
+
+    });
+
+  });
+</script>
+
+{% endblock %}

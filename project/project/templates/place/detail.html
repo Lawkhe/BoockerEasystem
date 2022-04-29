@@ -53,16 +53,20 @@
   var locations = [];
   var events = [];
   var locations_data = [];
+  var day_array = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
   "{% if data.services %}"
     locations_data = JSON.parse(JSON.stringify("{{ data.services|escapejs }}"));
     '{% for service in data.services %}'
-      locations.push({ id: '{{ service.id }}', name: '{{ service.name }}', tzOffset: -10 * 60 });
       '{% for schedule in service.schedule %}'
+        var name_day = '{{ service.name }} - ' + day_array['{{ schedule.day }}'-1]
+        locations.push({ id: '{{ schedule.day }}', name: name_day, tzOffset: -10 * 60 });
         events.push({
           name: 'Servicio',
-          location: '{{ service.id }}',
-          start: today(10, 0),
-          end: today(20, 30)
+          location: '{{ schedule.day }}',
+          // start: "{{ schedule.start|time:'H:i' }}",
+          start: today("{{ schedule.start|time:'H' }}", "{{ schedule.start|time:'i' }}"),
+          end: today("{{ schedule.end|time:'H' }}", "{{ schedule.end|time:'i' }}"),
+          // end: today(20, 30)
         });
       '{% endfor %}'
     '{% endfor %}'
@@ -86,17 +90,17 @@
   // --------------------------- Example 1 ---------------------------
   var $sked1 = $('#sked1').skedTape({
     caption: 'Servicios',
-    start: yesterday(22, 0),
-    end: today(12, 0),
+    start: today(6, 0),
+    end: today(24, 0),
     showEventTime: true,
-    showEventDuration: true,
+    showEventDuration: false,
     scrollWithYWheel: true,
     locations: locations.slice(),
     events: events.slice(),
     maxTimeGapHi: 60 * 1000, // 1 minute
     minGapTimeBetween: 1 * 60 * 1000,
     snapToMins: 1,
-    editMode: true,
+    editMode: false,
     timeIndicatorSerifs: true,
     showIntermission: true,
     formatters: {
@@ -118,24 +122,24 @@
       $el.prepend('<i class="fas fa-thumbtack text-muted"/> ');
     }
   });
-  $sked1.on('event:dragEnded.skedtape', function (e) {
-    console.log(e.detail.event);
-  });
-  $sked1.on('event:click.skedtape', function (e) {
-    $sked1.skedTape('removeEvent', e.detail.event.id);
-  });
-  $sked1.on('timeline:click.skedtape', function (e, api) {
-    try {
-      $sked1.skedTape('startAdding', {
-        name: 'New meeting',
-        duration: 60 * 60 * 1000
-      });
-    }
-    catch (e) {
-      if (e.name !== 'SkedTape.CollisionError') throw e;
-      //alert('Already exists');
-    }
-  });
+  // $sked1.on('event:dragEnded.skedtape', function (e) {
+  //   console.log(e.detail.event);
+  // });
+  // $sked1.on('event:click.skedtape', function (e) {
+  //   $sked1.skedTape('removeEvent', e.detail.event.id);
+  // });
+  // $sked1.on('timeline:click.skedtape', function (e, api) {
+  //   try {
+  //     $sked1.skedTape('startAdding', {
+  //       name: 'New meeting',
+  //       duration: 60 * 60 * 1000
+  //     });
+  //   }
+  //   catch (e) {
+  //     if (e.name !== 'SkedTape.CollisionError') throw e;
+  //     //alert('Already exists');
+  //   }
+  // });
 </script>
 
 {% endblock %}
