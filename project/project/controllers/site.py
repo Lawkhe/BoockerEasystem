@@ -5,7 +5,7 @@ from project.encrypt import Encrypt
 from project.models import User_College, User_Place
 
 @never_cache
-def login(request):
+def login(request, code=None):
     response = {}
     if request.method == "POST":
         data = request.POST
@@ -32,7 +32,11 @@ def login(request):
                         response['message'] = 'Clave incorrecta'
                 except User_College.DoesNotExist:
                     response['status'] = 'fail'
-                    response['message'] = 'El usuario no existe'
+                    response['message'] = 'El usuario no existe'  
+    elif code == 1:
+        response['status'] = 'success'
+        response['message'] = 'El usuario fue registrado con exito'
+        return render(request, 'site/login.html', context=response)
                     
     return render(request, 'site/login.html', context=response)
 
@@ -71,7 +75,7 @@ def signup(request):
                     # recipient_list = [new_user.email,]
                     # Email().welcome(recipient_list)
 
-                    return HttpResponseRedirect('/login/')
+                    return HttpResponseRedirect('/login/1/')
                 else:
                     response['status'] = 'fail'
                     response['message'] = 'El usuario ya existe'

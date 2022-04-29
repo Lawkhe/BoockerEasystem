@@ -95,6 +95,12 @@
           text: '{{ message }}',
           icon: "warning",
         });
+      } else if (status == 'success') {
+        swal({
+          title: "Información",
+          text: '{{ message }}',
+          icon: "success",
+        });
       }
     </script>
 

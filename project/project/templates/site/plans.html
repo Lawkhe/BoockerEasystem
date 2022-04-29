@@ -201,9 +201,12 @@
 
               var date_start = schedule.start.split(':')
               var date_end = schedule.end.split(':')
+              console.log('date_start');
+              console.log(date_start);
+              console.log(date_end);
 
               events.push({
-                name: 'Servicio',
+                name: service.name,
                 location: schedule.day,
                 start: today(date_start[0], date_start[1]),
                 end: today(date_end[0], date_end[1]),
@@ -227,7 +230,8 @@
             return date;
           }
           // --------------------------- Example 1 ---------------------------
-          var $sked1 = $('#sked1').skedTape({
+
+          var sked2Config = {
             caption: 'Servicios',
             start: today(6, 0),
             end: today(24, 0),
@@ -240,9 +244,10 @@
             minGapTimeBetween: 1 * 60 * 1000,
             snapToMins: 1,
             editMode: false,
-            timeIndicatorSerifs: true,
+            timeIndicatorSerifs: false,
             showIntermission: true,
             showDates: false,
+            maxZoom:5,
             formatters: {
               date: function (date) {
                 return $.fn.skedTape.format.date(date, 'l', '.');
@@ -261,13 +266,10 @@
               this.constructor.prototype.postRenderLocation($el, location, canAdd);
               $el.prepend('<i class="fas fa-thumbtack text-muted"/> ');
             }
-          });
-
-
-
-
+          };
 
           $('#ex1').modal();
+          $('#sked1').skedTape(sked2Config);
         }
       });
 

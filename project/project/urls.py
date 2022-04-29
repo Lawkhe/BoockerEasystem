@@ -21,6 +21,7 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', site.login),
     path('login/', site.login),
+    path('login/<int:code>/', site.login),
     path('logout/', site.logout),
     path('signup/', site.signup),
     path('index/', site.index),
