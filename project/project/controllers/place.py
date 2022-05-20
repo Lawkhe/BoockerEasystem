@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponseRedirect
 from project.models import (
+    Catalog_Service,
     Image_Place,
     Line_Day,
     Place,
@@ -9,9 +10,19 @@ from project.models import (
     Schedule_Service,
     User_Place,
 )
+import pusher
 
 
 def place(request):
+    # pusher_client = pusher.Pusher(
+    #     app_id='1411834',
+    #     key='05321c7f890e35ee486b',
+    #     secret='de01362e0ab27e26478c',
+    #     cluster='us2',
+    #     ssl=True
+    # )
+
+    # pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
     if 'user' in request.session:
         if request.session['user']['rol'] == 2:
             response = {}
@@ -49,11 +60,14 @@ def place(request):
                 for service_place_val in service_place_values:
 
                     schedule_data = []
+                    use_array = []
                     schedule_service_values = Schedule_Service.objects.filter(service_id=service_place_val.service_id, state=True)
                     for schedule_service_val in schedule_service_values:
                         day_array = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+                        use_array.append(schedule_service_val.line_day.day)
+
                         schedule_data.append({
-                            'id': schedule_service_val.line_day_id,
+                            'id': schedule_service_val.id,
                             'day': schedule_service_val.line_day.day,
                             'day_name': day_array[schedule_service_val.line_day.day-1],
                             'start': schedule_service_val.line_day.start_hour,
@@ -64,6 +78,7 @@ def place(request):
                         'name': service_place_val.service.name,
                         'description': service_place_val.service.description,
                         'schedule': schedule_data,
+                        'use_array': use_array,
                     })
 
                 # print('services_data')
@@ -118,7 +133,7 @@ def detail(request, pk):
             data_place = {
                 'name': place_val.name,
                 'description': place_val.description,
-                'type': place_val.type_place.name,
+                'type': place_val.type_place.type,
                 'services': services_data,
             }
             response['data'] = data_place
@@ -161,7 +176,7 @@ def get_data(request, pk):
             'id': place_val.id,
             'name': place_val.name,
             'description': place_val.description,
-            'type': place_val.type_place.name,
+            'type': place_val.type_place.id,
             'image': image,
             'services': services_data,
         }
@@ -176,9 +191,12 @@ def service(request, pk):
         
         try:
             service_val = Service.objects.get(id=pk)
+            catalog_values = Catalog_Service.objects.filter(service=service_val, state=True)
+
             data_service = {
                 'name': service_val.name,
                 'description': service_val.description,
+                'catalogs': catalog_values,
             }
             response['data'] = data_service
             return render(request, 'place/service.html', context=response)

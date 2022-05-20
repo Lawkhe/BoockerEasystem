@@ -15,7 +15,7 @@ Including another URLconf
 """
 # from django.contrib import admin
 from django.urls import path
-from project.controllers import site, start, place
+from project.controllers import site, start, place, service
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -32,4 +32,5 @@ urlpatterns = [
     path('start/run/', start.run),
     path('place/<int:pk>/', place.detail),
     path('get_place/<int:pk>/', place.get_data),
+    path('service/request/<int:pk>/', service.request_service),
 ]

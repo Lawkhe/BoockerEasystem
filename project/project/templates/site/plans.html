@@ -14,6 +14,10 @@
 .modal {
   max-width: 750px;
 }
+
+.button_catalog {
+  text-align: center;
+}
 </style>
 
 {% endblock %}
@@ -143,7 +147,9 @@
   <label id="description"></label>
   <br>
   <br>
-  <h6 id="type"></h6>
+  <div id="button_catalog" class="button_catalog">
+    <a id="catalog" href="" class="mdc-button mdc-ripple-upgraded outlined-button--primary">Realizar un Pedido</a>
+  </div>
   <br>
   <!-- <a id="time" href="/place/" rel="">Ver Horario</a>
   <br> -->
@@ -172,19 +178,25 @@
   $(document).ready(function() {
     $('#shop1map, #shop2map, #shop3map, #shop4map, #shop5map, #shop1, #shop2, #shop3, #shop4, #shop5').click(function(){
       var num = $(this).attr('num');
-      console.log('asdasdadd');
-      console.log(num);
+      // console.log('asdasdadd');
+      // console.log(num);
 
       $.ajax({
         type: "GET",
         url: "/get_place/" + num + "/",
         success: function(data) {
-          console.log(data);
+          // console.log(data);
           $('#image').attr('src', '/static/' + data.image);
           $('#name').html(data.name);
           $('#description').html(data.description);
-          $('#type').html(data.type);
-          $('#time').attr('href', '/place/' + data.id + '/');
+          // $('#type').html(data.type);
+
+          if (data.type == 1) {
+            $('#catalog').css('display', 'initial');
+            $('#catalog').attr('href', '/service/request/' + data.id + '/');
+          } else {
+            $('#catalog').css('display', 'none');
+          }
 
 
           var locations = [];
@@ -201,9 +213,9 @@
 
               var date_start = schedule.start.split(':')
               var date_end = schedule.end.split(':')
-              console.log('date_start');
-              console.log(date_start);
-              console.log(date_end);
+              // console.log('date_start');
+              // console.log(date_start);
+              // console.log(date_end);
 
               events.push({
                 name: service.name,

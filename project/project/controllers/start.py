@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from project.models import (
+    Catalog_Service,
     Type_Place,
     Place,
     Image_Place,
@@ -14,11 +15,6 @@ from django.conf import settings
 
 def run(request):
     response = {}
-    request.session['user'] = {
-        'id': 0,
-        'name': 'Desarrollador',
-        'email': 'josecheche14@gmail.com',
-    }
     response['session'] = request.session['user']
 
     roles = [
@@ -100,7 +96,7 @@ def run(request):
         {
             'name': 'Restaurante',
             'description': 'La sección de la Universidad Manuela Beltrán donde los estudiantes pueden ordenar comida y bebidas. Aquí puedes ordenar comida para que solo pases por ella a pagar.',
-            'type': 'Informativo',
+            'type': 'Servicio',
             'image': [
                 'restaurante_1.jpg'
             ],
@@ -115,7 +111,15 @@ def run(request):
                             'start': '10:00',
                             'end': '20:00',
                         },
-                    ] 
+                    ],
+                    'catalog': [
+                        {
+                            'name': 'Almuerzo del día',
+                            'description': 'Descripción Prueba',
+                            'cost': 11000,
+                            'image': 'almuerzo_1.jpg',
+                        },
+                    ],
                 },
             ]
         },
@@ -131,7 +135,15 @@ def run(request):
                     'name': 'Casillero',
                     'description': 'Reservar casillero para guardar pertenencias.',
                     'type': 'Reserva',
-                    'line_day': []
+                    'line_day': [],
+                    'catalog': [
+                        {
+                            'name': 'Casillero',
+                            'description': 'Descripción Prueba',
+                            'cost': 0,
+                            'image': 'casillero_1.jpg',
+                        },
+                    ],
                 },
             ]
         },
@@ -163,13 +175,41 @@ def run(request):
                     'name': 'Pizzeria',
                     'description': 'Ordenar porción de pizza para que esté lista cuando se pase a recoger.',
                     'type': 'Ventas',
-                    'line_day': []
+                    'line_day': [],
+                    'catalog': [
+                        {
+                            'name': 'Pizza Hawaiana',
+                            'description': 'Porción de pizza',
+                            'cost': 6500,
+                            'image': 'pizza_1.jpg',
+                        },
+                        {
+                            'name': 'Pizza Pepperoni',
+                            'description': 'Porción de pizza',
+                            'cost': 6500,
+                            'image': 'pizza_2.jpg',
+                        },
+                        {
+                            'name': 'Pizza Champiñon con Pollo',
+                            'description': 'Porción de pizza',
+                            'cost': 6500,
+                            'image': 'pizza_3.jpg',
+                        },
+                    ],
                 },
                 {
                     'name': 'Nativos',
                     'description': 'Ordenar bebida para que esté lista cuando pase a recoger.',
                     'type': 'Ventas',
-                    'line_day': []
+                    'line_day': [],
+                    'catalog': [
+                        {
+                            'name': 'Bebida',
+                            'description': 'Descripción Prueba',
+                            'cost': 3400,
+                            'image': 'nativo_1.jpg',
+                        },
+                    ],
                 },
             ]
         },
@@ -185,7 +225,21 @@ def run(request):
                     'name': 'Computadores',
                     'description': 'Reservar computador sin necesidad de apartarlo presencialmente.',
                     'type': 'Reserva',
-                    'line_day': []
+                    'line_day': [],
+                    'catalog': [
+                        {
+                            'name': 'Computador',
+                            'description': 'Uso de 2 horas del computador prestado por la universidad.',
+                            'cost': 0,
+                            'image': 'computador_1.jpg',
+                        },
+                        {
+                            'name': 'Portatil',
+                            'description': 'Uso de 2 horas del portatil prestado por la universidad.',
+                            'cost': 0,
+                            'image': 'computador_2.jpg',
+                        },
+                    ],
                 },
             ]
         },
@@ -246,29 +300,47 @@ def run(request):
                         service_place_val.service = service_val
                         service_place_val.save()
 
-                    # Horario
-                    for line_day in service['line_day']:
-                        try:
-                            line_day_val = Line_Day.objects.get(day=line_day['day'])
-                            line_day_val.start_hour = line_day['start']
-                            line_day_val.end_hour = line_day['end']
-                            line_day_val.save()
-                        except Line_Day.DoesNotExist:
-                            line_day_val = Line_Day()
-                            line_day_val.day = line_day['day']
-                            line_day_val.start_hour = line_day['start']
-                            line_day_val.end_hour = line_day['end']
-                            line_day_val.save()
-                        # Relación Horario y el Servicio
-                        try:
-                            schedule_service_val = Schedule_Service.objects.get(service=service_val, line_day=line_day_val)
-                            schedule_service_val.state = True
-                            schedule_service_val.save()
-                        except Schedule_Service.DoesNotExist:
-                            schedule_service_val = Schedule_Service()
-                            schedule_service_val.service = service_val
-                            schedule_service_val.line_day = line_day_val
-                            schedule_service_val.save()
+                    # # Horario
+                    # for line_day in service['line_day']:
+                    #     try:
+                    #         line_day_val = Line_Day.objects.get(day=line_day['day'])
+                    #         line_day_val.start_hour = line_day['start']
+                    #         line_day_val.end_hour = line_day['end']
+                    #         line_day_val.save()
+                    #     except Line_Day.DoesNotExist:
+                    #         line_day_val = Line_Day()
+                    #         line_day_val.day = line_day['day']
+                    #         line_day_val.start_hour = line_day['start']
+                    #         line_day_val.end_hour = line_day['end']
+                    #         line_day_val.save()
+                    #     # Relación Horario y el Servicio
+                    #     try:
+                    #         schedule_service_val = Schedule_Service.objects.get(service=service_val, line_day=line_day_val)
+                    #         schedule_service_val.state = True
+                    #         schedule_service_val.save()
+                    #     except Schedule_Service.DoesNotExist:
+                    #         schedule_service_val = Schedule_Service()
+                    #         schedule_service_val.service = service_val
+                    #         schedule_service_val.line_day = line_day_val
+                    #         schedule_service_val.save()
+                    # Catalogo
+                    if 'catalog' in service:
+                        for catalog in service['catalog']:
+                            path_image = 'images/services/' + catalog['image']
+                            try:
+                                catalog_val = Catalog_Service.objects.get(service=service_val, name=catalog['name'])
+                                catalog_val.description = catalog['description']
+                                catalog_val.cost = catalog['cost']
+                                catalog_val.image = path_image
+                                catalog_val.save()
+                            except Catalog_Service.DoesNotExist:
+                                catalog_val = Catalog_Service()
+                                catalog_val.service = service_val
+                                catalog_val.name = catalog['name']
+                                catalog_val.description = catalog['description']
+                                catalog_val.cost = catalog['cost']
+                                catalog_val.image = path_image
+                                catalog_val.save()
                 except Type_Service.DoesNotExist:
                     pass
         except Type_Place.DoesNotExist:

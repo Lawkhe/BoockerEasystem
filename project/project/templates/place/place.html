@@ -81,7 +81,7 @@
                     <td>
                       <button schedule_id="{{ schedule.id }}" schedule_day="{{ schedule.day }}" 
                         schedule_start="{{ schedule.start|time:'H:i' }}" schedule_end="{{ schedule.end|time:'H:i' }}" 
-                        service_id="{{ service.id }}" class="mdc-button text-button--secondary edit-schedule">
+                        service_id="{{ service.id }}" service_use="{{ service.use_array }}" class="mdc-button text-button--secondary edit-schedule">
                         <i class="material-icons mdc-button__icon">edit</i>
                       </button>
                     </td>
@@ -91,7 +91,7 @@
             </table>
           </div>
           <br>
-          <button service_id="{{ service.id }}" class="btn_create mdc-button mdc-button--outlined outlined-button--secondary">
+          <button service_id="{{ service.id }}" service_use="{{ service.use_array }}" class="btn_create mdc-button mdc-button--outlined outlined-button--secondary">
             Agregar horario
           </button>
 
@@ -181,6 +181,12 @@
       var service = $(this).attr('service_id');
       $('#id_service').val(service);
 
+      $('#day_schedule').children('option').css('display','initial');
+      var use = $(this).attr('service_use');
+      JSON.parse(use).forEach(d => {
+        $('#day_schedule').children('option[value="' + d + '"]').css('display','none');
+      });
+
       $('#id_schedule').val('');
       $('#day_schedule').val('');
       $('#start_schedule').val('');
@@ -195,6 +201,13 @@
       var end = $(this).attr('schedule_end');
       var service = $(this).attr('service_id');
 
+      $('#day_schedule').children('option').css('display','initial');
+      var use = $(this).attr('service_use');
+      JSON.parse(use).forEach(d => {
+        $('#day_schedule').children('option[value="' + d + '"]').css('display','none');
+      });
+
+      $('#day_schedule').children('option[value="' + day + '"]').css('display','initial');
       $('#id_schedule').val(id);
       $('#day_schedule').val(day);
       $('#start_schedule').val(start);
