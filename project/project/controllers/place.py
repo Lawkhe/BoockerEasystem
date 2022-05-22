@@ -17,15 +17,6 @@ import pusher
 
 
 def place(request):
-    # pusher_client = pusher.Pusher(
-    #     app_id='1411834',
-    #     key='05321c7f890e35ee486b',
-    #     secret='de01362e0ab27e26478c',
-    #     cluster='us2',
-    #     ssl=True
-    # )
-
-    # pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
     if 'user' in request.session:
         if request.session['user']['rol'] == 2:
             response = {}
@@ -34,8 +25,8 @@ def place(request):
             try:
                 if request.method == "POST":
                     data = request.POST
-                    print('data:::::::::::::::::')
-                    print(data)
+                    # print('data:::::::::::::::::')
+                    # print(data)
                     line_day_val = Line_Day()
                     line_day_val.day = data['day']
                     line_day_val.start_hour = data['start']
@@ -130,8 +121,8 @@ def detail(request, pk):
                     'schedule': schedule_data,
                 })
 
-            print('services_data')
-            print(services_data)
+            # print('services_data')
+            # print(services_data)
 
             data_place = {
                 'name': place_val.name,
@@ -205,7 +196,7 @@ def service(request, pk):
                 order_list.append(order.order_service_id)
             today = date.today()
             order_service_values = Order_Service.objects.filter(id__in=order_list, status=1, date=today)
-            accepted_service_values = Order_Service.objects.filter(id__in=order_list, status=2, date=today)
+            accepted_service_values = Order_Service.objects.filter(id__in=order_list, status__in=[2,4], date=today)
 
             data_service = {
                 'id': service_val.id,

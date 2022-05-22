@@ -108,6 +108,7 @@
                 <tr>
                   <th>Usuario</th>
                   <th>Fecha</th>
+                  <th>Estado</th>
                   <th>Confirmar</th>
                 </tr>
               </thead>
@@ -116,7 +117,15 @@
                 <tr id="accept_{{ accept.id }}">
                   <td>{{ accept.user_college.name }}</td>
                   <td>{{ accept.date|date:'Y-m-d' }}</td>
-                  <td><button order_id="{{ accept.id }}" class="mdc-button mdc-ripple-upgraded outlined-button--primary see_accept_order">Ver</button></td>
+                  <td>
+                    {% if accept.status == 2 %}
+                      Aceptado
+                    {% else %}
+                      Listo
+                    {% endif %}
+                  </td>
+                  <td><button order_id="{{ accept.id }}" order_name="{{ accept.user_college.name }}" order_date="{{ accept.date|date:'Y-m-d' }}"
+                    class="mdc-button mdc-ripple-upgraded outlined-button--primary see_accept_order">Ver</button></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -168,6 +177,9 @@
         <div id="btn_4" class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
           <button id="ready_order" class="mdc-button mdc-button--raised w-100">Pedido Listo</button>
         </div>
+        <div id="btn_5" class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+          <button id="deliver_order" class="mdc-button mdc-button--success w-100">Entregar Pedido</button>
+        </div>
       </div>
     </div>
   </div>
@@ -203,7 +215,7 @@
       stack: true,
       position_class:"toast-top-right",
       fullscreen:false,
-      timeout: 4000,
+      timeout: 6000,
       sticky: false,
       has_progress: true,
       rtl:false,
@@ -227,6 +239,7 @@
       $('#btn_2').css('display', 'block');
       $('#btn_3').css('display', 'block');
       $('#btn_4').css('display', 'none');
+      $('#btn_5').css('display', 'none');
       order(1);
     });
 
@@ -237,6 +250,7 @@
       $('#btn_2').css('display', 'none');
       $('#btn_3').css('display', 'none');
       $('#btn_4').css('display', 'block');
+      $('#btn_5').css('display', 'none');
       order(2);
     });
 
@@ -250,6 +264,10 @@
 
     $('#ready_order').click(function(){
       change_state(4);
+    });
+
+    $('#deliver_order').click(function(){
+      change_state(5);
     });
 
   });
@@ -267,6 +285,10 @@
           $('#list_catalog_order').append(content);
         });
         $('#total_order').text('$'+ data.total);
+        if (data.status == 4) {
+          $('#btn_4').css('display', 'none');
+          $('#btn_5').css('display', 'block');
+        }
         $('#order_confirm').modal();
       }
     });
@@ -284,9 +306,13 @@
         if (data.status == 'success') {
           $('#order_' + order_select).remove();
           if (status == 2) {
-            var content = '<tr id="accept_' + order_select + '"><td>' + order_name + '</td><td>' + order_date + '</td>' +
+            var content = '<tr id="accept_' + order_select + '"><td>' + order_name + '</td><td>' + order_date + '</td><td>Aceptado</td>' +
               '<td><button order_id="' + order_select + '" class="mdc-button mdc-ripple-upgraded outlined-button--primary see_accept_order">Ver</button></td></tr>';
             $('#list_accept_order').append(content);
+          } else if (status == 4) {
+            $('#accept_' + order_select).children().eq(2).html('Listo');
+          } else if (status == 5) {
+            $('#accept_' + order_select).remove();
           }
         }
       }
