@@ -15,7 +15,7 @@ from django.conf import settings
 
 def run(request):
     response = {}
-    response['session'] = request.session['user']
+    # response['session'] = request.session['user']
 
     roles = [
         {
