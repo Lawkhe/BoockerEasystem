@@ -7,6 +7,11 @@
 <link rel="stylesheet" href="{% static 'vendors/map/style.css' %}">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+<style>
+  .modal {
+    max-width: 600px;
+  }
+</style>
 {% endblock %}
 {% block main %} 
 <!-- TODO DEL HTML -->
@@ -57,19 +62,29 @@
         <div class="table-responsive">
           <div class="mdc-card info-card info-card--success">
             <div class="card-inner">
-              <h5 class="card-title">Pendientes Hoy</h5>
+              <h5 class="card-title">Por Confirmar</h5>
             </div>
             <table class="table table-hoverable">
               <thead>
                 <tr>
-                  <th class="text-left">Usuario</th>
-                  <th>Producto</th>
-                  <th>Cantidad</th>
-                  <th></th>
+                  <th>Usuario</th>
+                  <th>Fecha</th>
+                  <th>Confirmar</th>
                 </tr>
               </thead>
-              <tbody>
-                
+              <tbody id="list_order">
+                {% for order in data.orders %}
+                <tr id="order_{{ order.id }}">
+                  <td>{{ order.user_college.name }}</td>
+                  <td>{{ order.date|date:'Y-m-d' }}</td>
+                  <td>
+                    <button order_id="{{ order.id }}" order_name="{{ order.user_college.name }}" order_date="{{ order.date|date:'Y-m-d' }}"
+                      class="mdc-button mdc-ripple-upgraded outlined-button--primary see_order">
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
@@ -78,6 +93,86 @@
     </div>
   </div>
 </div>
+
+<div class="page-wrapper mdc-toolbar-fixed-adjust">
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-12-tablet">
+        <div class="table-responsive">
+          <div class="mdc-card info-card info-card--success">
+            <div class="card-inner">
+              <h5 class="card-title">Pendientes</h5>
+            </div>
+            <table class="table table-hoverable">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Fecha</th>
+                  <th>Confirmar</th>
+                </tr>
+              </thead>
+              <tbody id="list_accept_order">
+                {% for accept in data.accepted %}
+                <tr id="accept_{{ accept.id }}">
+                  <td>{{ accept.user_college.name }}</td>
+                  <td>{{ accept.date|date:'Y-m-d' }}</td>
+                  <td><button order_id="{{ accept.id }}" class="mdc-button mdc-ripple-upgraded outlined-button--primary see_accept_order">Ver</button></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="order_confirm" class="modal">
+  <div class="mdc-card">
+    <div class="mdc-layout-grid">
+      <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop">
+          <h3>Orden</h3>
+        </div>
+        <!-- <div id="list_catalog_order" class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+
+        </div> -->
+        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-12-tablet">
+          <div class="table-responsive">
+            <div class="mdc-card info-card info-card--success">
+              <table class="table table-hoverable">
+                <thead>
+                  <tr>
+                    <th class="text-left">Producto</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="list_catalog_order">
+                  
+                </tbody>
+              </table>
+              <div>
+                <h5 style="float: right;" class="card-padding font-weight-light pb-2 mb-1">Total <b id="total_order">$0</b></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="btn_3" class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6">
+          <button id="cancel_order" class="mdc-button mdc-button--danger w-100">Rechazar</button>
+        </div>
+        <div id="btn_2" class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6">
+          <button id="accept_order" class="mdc-button mdc-button--raised w-100">Aceptar</button>
+        </div>
+        <div id="btn_4" class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+          <button id="ready_order" class="mdc-button mdc-button--raised w-100">Pedido Listo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}
 {% block js %} 
@@ -88,35 +183,116 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
 
 <script>
-  $(document).ready(function() {
-    $('.btn_create').click(function(){
-      var service = $(this).attr('service_id');
-      $('#id_service').val(service);
 
-      $('#id_schedule').val('');
-      $('#day_schedule').val('');
-      $('#start_schedule').val('');
-      $('#end_schedule').val('');
-      $('#ex1').modal();
+  
+  // Enable pusher logging - don't include this in production
+  Pusher.logToConsole = false;
+
+  var pusher = new Pusher('05321c7f890e35ee486b', {
+    cluster: 'us2'
+  });
+
+  var channel = pusher.subscribe('my-channel-{{ data.id }}');
+  channel.bind('my-event', function(data) {
+    // alert(JSON.stringify(data));
+    console.log(data);
+    
+    $.Toast(data.title, data.message, "info", {
+      has_icon: true,
+      has_close_btn: true,
+      stack: true,
+      position_class:"toast-top-right",
+      fullscreen:false,
+      timeout: 4000,
+      sticky: false,
+      has_progress: true,
+      rtl:false,
     });
 
-    $('.edit-schedule').click(function(){
-      var id = $(this).attr('schedule_id');
-      var day = $(this).attr('schedule_day');
-      var start = $(this).attr('schedule_start');
-      var end = $(this).attr('schedule_end');
-      var service = $(this).attr('service_id');
+    var content = '<tr id="order_' + data.order.id + '"><td>' + data.order.name + '</td><td>' + data.order.date + '</td>' +
+      '<td><button order_id="' + data.order.id + '" order_name="' + data.order.name + '" order_date="' + data.order.date + '" class="mdc-button mdc-ripple-upgraded outlined-button--primary see_order">Ver</button></td></tr>';
+    $('#list_order').append(content);
 
-      $('#id_schedule').val(id);
-      $('#day_schedule').val(day);
-      $('#start_schedule').val(start);
-      $('#end_schedule').val(end);
-      $('#id_service').val(service);
-      $('#ex1').modal();
+  });
 
+  var order_select = 0;
+  var order_name = '';
+  var order_date = '';
+  $(document).ready(function() {
+    
+    $(document).on('click', '.see_order', function() {
+      order_select = $(this).attr('order_id');
+      order_name = $(this).attr('order_name');
+      order_date = $(this).attr('order_date');
+      $('#btn_2').css('display', 'block');
+      $('#btn_3').css('display', 'block');
+      $('#btn_4').css('display', 'none');
+      order(1);
+    });
+
+    $(document).on('click', '.see_accept_order', function() {
+      order_select = $(this).attr('order_id');
+      order_name = $(this).attr('order_name');
+      order_date = $(this).attr('order_date');
+      $('#btn_2').css('display', 'none');
+      $('#btn_3').css('display', 'none');
+      $('#btn_4').css('display', 'block');
+      order(2);
+    });
+
+    $('#accept_order').click(function(){
+      change_state(2);
+    });
+
+    $('#cancel_order').click(function(){
+      change_state(3);
+    });
+
+    $('#ready_order').click(function(){
+      change_state(4);
     });
 
   });
+
+  function order(option) {
+    $('#list_catalog_order').html('');
+    $.ajax({
+      type: "GET",
+      url: "/service/get_order/" + order_select + "/",
+      success: function(data) {
+        console.log(data);
+        
+        data.catalogs.forEach(catalog => {
+          var content = '<tr><td>' + catalog.name + '</td><td>' + catalog.quantity + '</td><td>$' + catalog.total + '</td></tr>';
+          $('#list_catalog_order').append(content);
+        });
+        $('#total_order').text('$'+ data.total);
+        $('#order_confirm').modal();
+      }
+    });
+  }
+
+  function change_state (status) {
+    console.log('change_state');
+    console.log(status);
+    console.log(order_select);
+    $.ajax({
+      type: "GET",
+      url: "/service/change_state/" + order_select + "/" + status + "/",
+      success: function(data) {
+        console.log(data);
+        if (data.status == 'success') {
+          $('#order_' + order_select).remove();
+          if (status == 2) {
+            var content = '<tr id="accept_' + order_select + '"><td>' + order_name + '</td><td>' + order_date + '</td>' +
+              '<td><button order_id="' + order_select + '" class="mdc-button mdc-ripple-upgraded outlined-button--primary see_accept_order">Ver</button></td></tr>';
+            $('#list_accept_order').append(content);
+          }
+        }
+      }
+    });
+    $.modal.close();
+  }
 </script>
 
 {% endblock %}

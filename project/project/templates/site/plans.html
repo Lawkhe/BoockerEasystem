@@ -148,7 +148,6 @@
   <br>
   <br>
   <div id="button_catalog" class="button_catalog">
-    <a id="catalog" href="" class="mdc-button mdc-ripple-upgraded outlined-button--primary">Realizar un Pedido</a>
   </div>
   <br>
   <!-- <a id="time" href="/place/" rel="">Ver Horario</a>
@@ -191,21 +190,16 @@
           $('#description').html(data.description);
           // $('#type').html(data.type);
 
-          if (data.type == 1) {
-            $('#catalog').css('display', 'initial');
-            $('#catalog').attr('href', '/service/request/' + data.id + '/');
-          } else {
-            $('#catalog').css('display', 'none');
-          }
-
-
           var locations = [];
           var events = [];
           var locations_data = [];
           var day_array = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
           locations_data = data.services;
+          var content_buttons = '';
 
           data.services.forEach(service => {
+            content_buttons += '<a id="catalog" href="/service/request/' + service.id +
+              '/" class="mdc-button mdc-ripple-upgraded outlined-button--primary">Realizar un Pedido - ' + service.name + '</a>';
             service.schedule.forEach(schedule => {
               
               var name_day = service.name + ' - ' + day_array[schedule.day-1];
@@ -225,6 +219,17 @@
               });
             });
           });
+          
+          if (data.type == 1) {
+            $('#button_catalog').css('display', 'block');
+            $('#button_catalog').html(content_buttons);
+            
+            // $('#catalog').attr('href', '/service/request/' + data.id + '/');
+          } else {
+            $('#button_catalog').css('display', 'none');
+            $('#button_catalog').html('');
+          }
+
           // -------------------------- Helpers ------------------------------
           function today(hours, minutes) {
             var date = new Date();

@@ -33,4 +33,7 @@ urlpatterns = [
     path('place/<int:pk>/', place.detail),
     path('get_place/<int:pk>/', place.get_data),
     path('service/request/<int:pk>/', service.request_service),
+    path('service/add/', service.add_service),
+    path('service/get_order/<int:pk>/', service.get_order),
+    path('service/change_state/<int:pk>/<int:status>/', service.change_state),
 ]

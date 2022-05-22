@@ -9,6 +9,7 @@
   <!-- plugins:css -->
   <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
   <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/toast/toast.style.css' %}">
   <!-- endinject -->
   <!-- Plugin css for this page -->
   <!-- End plugin css for this page -->
@@ -16,7 +17,11 @@
   <link rel="stylesheet" href="{% static 'css/demo/style.css' %}">
   <!-- End layout styles -->
   <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
-
+  <style>
+    .material-icons {
+      font-family: 'Material Icons' !important;
+    }
+  </style>
   {% block head %} {% endblock %}
 </head>
 <body>
@@ -141,6 +146,7 @@
   </div>
   <!-- plugins:js -->
   <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+  <script src="{% static 'vendors/toast/toast.script.js' %}"></script>
   <!-- endinject -->
   <!-- Plugin js for this page-->
   <!-- End plugin js for this page-->
@@ -180,16 +186,28 @@
   </script>
   <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
   <script>
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
-
+    Pusher.logToConsole = false;
+  
     var pusher = new Pusher('05321c7f890e35ee486b', {
       cluster: 'us2'
     });
-
-    var channel = pusher.subscribe('my-channel');
+  
+    var channel = pusher.subscribe('my-channel-{{ session.id }}');
     channel.bind('my-event', function(data) {
-      alert(JSON.stringify(data));
+      // alert(JSON.stringify(data));
+      console.log(data);
+      
+      $.Toast(data.title, data.message, data.state, {
+        has_icon: true,
+        has_close_btn: true,
+        stack: true,
+        position_class:"toast-top-right",
+        fullscreen:false,
+        timeout: 4000,
+        sticky: false,
+        has_progress: true,
+        rtl:false,
+      });
     });
   </script>
   {% block js %} {% endblock %}

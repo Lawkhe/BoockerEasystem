@@ -58,21 +58,67 @@
         <div class="table-responsive">
           <div class="mdc-card info-card info-card--success">
             <div class="card-inner">
-              <h5 class="card-title">Pendientes Hoy</h5>
+              <h5 class="card-title">Solicitar Servicio</h5>
             </div>
-            <table class="table table-hoverable">
-              <thead>
-                <tr>
-                  <th class="text-left">Usuario</th>
-                  <th>Producto</th>
-                  <th>Cantidad</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
+            <div>
+              <div class="mdc-layout-grid">
+                <div class="mdc-layout-grid__inner">
+                  <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4">
+                    <div class="mdc-text-field w-100">
+                      <select name="catalog" class="mdc-text-field__input" style="height: 110%;" id="catalog_service" required>
+                        {% for catalog in data.catalogs %}
+                        <option cost="{{ catalog.cost }}" value="{{ catalog.id }}">{{ catalog.name }}</option>
+                        {% endfor %}
+                      </select>
+                      <div class="mdc-line-ripple"></div>
+                      <label for="text-field-hero-input" class="mdc-floating-label">Producto</label>
+                    </div>
+                  </div>
+                  <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4">
+                    <div class="mdc-text-field w-100">
+                      <input name="num" type="number" min="0" max="20" autocomplete="off" class="mdc-text-field__input" id="num_service" required>
+                      <div class="mdc-line-ripple"></div>
+                      <label for="text-field-hero-input" class="mdc-floating-label">Cantidad</label>
+                    </div>
+                  </div>
+                  <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4">
+                    <button id="add_catalog" class="mdc-button mdc-button--raised w-100">Añadir</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mdc-card info-card info-card--success">
+            <div class="table-responsive">
+              <div class="mdc-card info-card info-card--success">
+                <table class="table table-hoverable">
+                  <thead>
+                    <tr>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Total</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="list_catalog">
+                  </tbody>
+                </table>
+                <div>
+                  <h5 style="float: right;" class="card-padding font-weight-light pb-2 mb-1">Total <b id="total_service">$0</b></h5>
+                </div>
+              </div>
+            </div>
                 
-              </tbody>
-            </table>
+            <div class="mdc-layout-grid">
+              <div class="mdc-layout-grid__inner">
+                <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6">
+                  <button id="cancel_service" class="mdc-button mdc-button--danger w-100">Cancelar</button>
+                </div>
+                <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6">
+                  <button id="add_service" class="mdc-button mdc-button--success w-100">Solicitar</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -90,34 +136,97 @@
 
 <script>
   $(document).ready(function() {
-    $('.btn_create').click(function(){
-      var service = $(this).attr('service_id');
-      $('#id_service').val(service);
 
-      $('#id_schedule').val('');
-      $('#day_schedule').val('');
-      $('#start_schedule').val('');
-      $('#end_schedule').val('');
-      $('#ex1').modal();
+    var catalog_service = [];
+
+    $('#add_catalog').click(function(){
+      var id = $('#catalog_service').val();
+      var name = $('#catalog_service').children("option:selected").text();
+      var cost = $('#catalog_service').children("option:selected").attr('cost');
+      var num = $('#num_service').val();
+      var total = num * cost;
+      
+      if (num != '' && num > 0 && num < 21) {
+        var content = '<tr><td>' + name + '</td><td>' + num + '</td><td>$' + total + '</td><td></td></tr>';
+        $('#list_catalog').append(content);
+        
+        catalog_service.push({
+          'id': id,
+          'num': num,
+          'total': total,
+        });
+
+        var total_service = 0;
+        catalog_service.forEach(element => {
+          total_service += element.total;
+        });
+        $('#total_service').text('$'+ total_service);
+      } else {
+        swal({
+          title: "Servicio",
+          text: 'Cantidad invalida',
+          icon: "warning",
+        });
+      }
+
+      // var service = $(this).attr('service_id');
+
+
+      // $('#id_service').val(service);
+
+      // $('#id_schedule').val('');
+      // $('#day_schedule').val('');
+      // $('#start_schedule').val('');
+      // $('#end_schedule').val('');
+      // $('#ex1').modal();
+    });
+      
+    $('#cancel_service').click(function(){
+      $('#list_catalog').html('');
+      catalog_service = [];
+      $('#total_service').text('$0');
     });
 
-    $('.edit-schedule').click(function(){
-      var id = $(this).attr('schedule_id');
-      var day = $(this).attr('schedule_day');
-      var start = $(this).attr('schedule_start');
-      var end = $(this).attr('schedule_end');
-      var service = $(this).attr('service_id');
-
-      $('#id_schedule').val(id);
-      $('#day_schedule').val(day);
-      $('#start_schedule').val(start);
-      $('#end_schedule').val(end);
-      $('#id_service').val(service);
-      $('#ex1').modal();
-
+    $('#add_service').click(function(){
+      if (catalog_service.length > 0) {
+        $.ajax({
+          type: "POST",
+          url: "/service/add/",
+          data: {
+            'catalog': JSON.stringify(catalog_service)
+          },
+          success:function(data){
+              console.log('data')
+              console.log(data)
+              if (data['status'] == 'success') {
+                $('#list_catalog').html('');
+                catalog_service = [];
+                $('#total_service').text('$0');
+                swal({
+                  title: "Servicio",
+                  text: 'Se ha realizado el pedido correctamente!',
+                  icon: "success",
+                });
+              } else {
+                swal({
+                  title: "Servicio",
+                  text: 'Ocurrio un error, intentalo mas tarde!',
+                  icon: "error",
+                });
+              }
+          },
+        });
+      } else {
+        swal({
+          title: "Servicio",
+          text: 'Debes añadir un producto!',
+          icon: "warning",
+        });
+      }
     });
 
   });
+
 </script>
 
 {% endblock %}

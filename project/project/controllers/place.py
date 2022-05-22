@@ -9,7 +9,10 @@ from project.models import (
     Service_Place,
     Schedule_Service,
     User_Place,
+    Order_Catalog,
+    Order_Service,
 )
+from datetime import date
 import pusher
 
 
@@ -190,13 +193,27 @@ def service(request, pk):
         response['session'] = request.session['user']
         
         try:
+            catalog_list = []
             service_val = Service.objects.get(id=pk)
             catalog_values = Catalog_Service.objects.filter(service=service_val, state=True)
+            for catalog in catalog_values:
+                catalog_list.append(catalog.id)
+            order_values = Order_Catalog.objects.filter(catalog_service_id__in=catalog_list)
+            
+            order_list = []
+            for order in order_values:
+                order_list.append(order.order_service_id)
+            today = date.today()
+            order_service_values = Order_Service.objects.filter(id__in=order_list, status=1, date=today)
+            accepted_service_values = Order_Service.objects.filter(id__in=order_list, status=2, date=today)
 
             data_service = {
+                'id': service_val.id,
                 'name': service_val.name,
                 'description': service_val.description,
                 'catalogs': catalog_values,
+                'orders': order_service_values,
+                'accepted': accepted_service_values,
             }
             response['data'] = data_service
             return render(request, 'place/service.html', context=response)
