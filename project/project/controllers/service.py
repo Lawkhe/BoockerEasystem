@@ -186,7 +186,7 @@ def record(request):
         response['session'] = request.session['user']
         
         try:
-            order_service_values = Order_Service.objects.filter(user_college_id=request.session['user']['id']).order_by('-id')
+            order_service_values = Order_Service.objects.filter(user_college_id=request.session['user']['id']).order_by('-id')[:10]
             order_service_data = []
             
             for order_service_val in order_service_values:
