@@ -204,7 +204,7 @@
     cluster: 'us2'
   });
 
-  var channel = pusher.subscribe('my-channel-{{ data.id }}');
+  var channel = pusher.subscribe('my-channel-service-{{ data.id }}');
   channel.bind('my-event', function(data) {
     // alert(JSON.stringify(data));
     console.log(data);
@@ -278,7 +278,7 @@
       type: "GET",
       url: "/service/get_order/" + order_select + "/",
       success: function(data) {
-        console.log(data);
+        // console.log(data);
         
         data.catalogs.forEach(catalog => {
           var content = '<tr><td>' + catalog.name + '</td><td>' + catalog.quantity + '</td><td>$' + catalog.total + '</td></tr>';
@@ -295,14 +295,14 @@
   }
 
   function change_state (status) {
-    console.log('change_state');
-    console.log(status);
-    console.log(order_select);
+    // console.log('change_state');
+    // console.log(status);
+    // console.log(order_select);
     $.ajax({
       type: "GET",
       url: "/service/change_state/" + order_select + "/" + status + "/",
       success: function(data) {
-        console.log(data);
+        // console.log(data);
         if (data.status == 'success') {
           $('#order_' + order_select).remove();
           if (status == 2) {

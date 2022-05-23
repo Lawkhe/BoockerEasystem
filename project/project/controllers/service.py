@@ -100,7 +100,7 @@ def add_service(request):
                     'date': str(order_val.date)
                 }
 
-                pusher_client.trigger('my-channel-' + str(service_id), 'my-event', {
+                pusher_client.trigger('my-channel-service-' + str(service_id), 'my-event', {
                     'title': 'Confirmar',
                     'message': 'Nuevo pedido agregado',
                     'order': order_data
@@ -179,3 +179,53 @@ def change_state(request, pk, status):
     except Order_Service.DoesNotExist:
         pass
     return JsonResponse(response)
+
+def record(request):
+    if 'user' in request.session:
+        response = {}
+        response['session'] = request.session['user']
+        
+        try:
+            order_service_values = Order_Service.objects.filter(user_college_id=request.session['user']['id']).order_by('-id')
+            order_service_data = []
+            
+            for order_service_val in order_service_values:
+                order_catalog_values = Order_Catalog.objects.filter(order_service_id=order_service_val.id)[:1]
+                service_name = ''
+                for order_catalog_val in order_catalog_values:
+                    if service_name == '':
+                        service_name = order_catalog_val.catalog_service.service.name
+                order_service_data.append({
+                    'id': order_service_val.id,
+                    'service': service_name,
+                    'date': order_service_val.date,
+                    'status': order_service_val.status,
+                })
+            response['orders'] = order_service_data
+            return render(request, 'service/record.html', context=response)
+        except Service.DoesNotExist:
+            pass
+        return HttpResponseRedirect('/index/')
+    else:
+        return HttpResponseRedirect('/login/')
+
+def get_records(request, pk):
+    data_order = {}
+    try:
+        order_service_val = Order_Service.objects.get(id=pk)
+        traza_data = []
+        traceability_order_values = Traceability_Order_Service.objects.filter(order_service_id=pk)
+        for traceability_order_val in traceability_order_values:
+            traza_data.append({
+                'description': traceability_order_val.description,
+                'date': str(traceability_order_val.date_time),
+            })
+
+        data_order = {
+            'id': order_service_val.id,
+            'status': order_service_val.status,
+            'traza_data': traza_data,
+        }
+    except Order_Service.DoesNotExist:
+        pass
+    return JsonResponse(data_order)

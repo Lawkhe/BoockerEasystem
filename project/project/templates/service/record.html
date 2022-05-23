@@ -1,0 +1,166 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block head %}
+<!-- ESTILOS DEL CSS -->
+<link rel="stylesheet" href="{% static 'vendors/jvectormap/jquery-jvectormap.css' %}">
+<link rel="stylesheet" href="{% static 'vendors/map/style.css' %}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+<style>
+  .modal {
+    max-width: 650px;
+  }
+</style>
+{% endblock %}
+{% block main %} 
+
+<div class="page-wrapper mdc-toolbar-fixed-adjust">
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-12-tablet">
+        <div class="table-responsive">
+          <div class="mdc-card info-card info-card--success">
+            <div class="card-inner">
+              <h5 class="card-title">Historial</h5>
+            </div>
+            <table class="table table-hoverable">
+              <thead>
+                <tr>
+                  <th>Servicio</th>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                  <th>Detalle</th>
+                </tr>
+              </thead>
+              <tbody id="list_accept_order">
+                {% for order in orders %}
+                <tr id="order_{{ order.id }}">
+                  <td>{{ order.service }}</td>
+                  <td>{{ order.date|date:'Y-m-d' }}</td>
+                  <td>
+                    {% if order.status == 1 %}
+                      Creado
+                    {% elif order.status == 2 %}
+                      Aceptado
+                    {% elif order.status == 3 %}
+                      Rechazado
+                    {% elif order.status == 4 %}
+                      Listo
+                    {% elif order.status == 5 %}
+                      Entregado
+                    {% endif %}
+                  </td>
+                  <td><button order_id="{{ order.id }}"
+                    class="mdc-button mdc-ripple-upgraded outlined-button--primary see_traza_order">Ver</button></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="order_traza" class="modal">
+  <div class="mdc-card">
+    <div class="mdc-layout-grid">
+      <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop">
+          <h3>Detalles</h3>
+        </div>
+        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-12-tablet">
+          <div class="table-responsive">
+            <div class="mdc-card info-card info-card--success">
+              <table class="table table-hoverable">
+                <thead>
+                  <tr>
+                    <th class="text-left">Producto</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="list_catalog_order">
+                  
+                </tbody>
+              </table>
+              <div>
+                <h5 style="float: right;" class="card-padding font-weight-light pb-2 mb-1">Total <b id="total_order">$0</b></h5>
+              </div>
+              <br>
+              
+              <div class="card-inner">
+                <h5 class="card-title">Trazabilidad</h5>
+              </div>
+              <table class="table table-hoverable">
+                <thead>
+                  <tr>
+                    <th>Detalle</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody id="list_traza_order">
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js %} 
+<!-- CODIGO JAVASCRIPT -->
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+<script src="{% static 'vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+
+    $('.see_traza_order').click(function(){
+      
+      $('#list_catalog_order').html('');
+      $('#list_traza_order').html('');
+
+      var order_select = $(this).attr('order_id');
+      $.ajax({
+        type: "GET",
+        url: "/service/get_order/" + order_select + "/",
+        success: function(data) {
+          data.catalogs.forEach(catalog => {
+            var content = '<tr><td>' + catalog.name + '</td><td>' + catalog.quantity + '</td><td>$' + catalog.total + '</td></tr>';
+            $('#list_catalog_order').append(content);
+          });
+          $('#total_order').text('$'+ data.total);
+        }
+      });
+
+      $.ajax({
+        type: "GET",
+        url: "/service/get_record/" + order_select + "/",
+        success: function(data) {
+          data.traza_data.forEach(traza => {
+            var d = new Date(traza.date);
+            var datestring = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate() + " " +
+              d.getHours() + ":" + d.getMinutes();
+            var content = '<tr><td>' + traza.description + '</td><td>' + datestring + '</td></tr>';
+            $('#list_traza_order').append(content);
+          });
+          $('#order_traza').modal();
+        }
+      });
+
+    });
+
+  });
+
+</script>
+
+{% endblock %}
