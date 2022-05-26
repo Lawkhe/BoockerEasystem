@@ -11,7 +11,7 @@ from project.models import (
 from rest_framework.decorators import api_view
 # from datetime import date, time
 
-from datetime import datetime
+from datetime import datetime, date
 import pusher
 import json
 
@@ -116,6 +116,7 @@ def get_order(request, pk):
         order_service_val = Order_Service.objects.get(id=pk)
         catalog_data = []
         total = 0
+        multa = 0
         order_catalog_values = Order_Catalog.objects.filter(order_service_id=pk)
         for order_catalog_val in order_catalog_values:
             catalog_data.append({
@@ -125,12 +126,21 @@ def get_order(request, pk):
             })
             total += order_catalog_val.catalog_service.cost * order_catalog_val.quantity
 
+        today = date.today()
+        if order_service_val.status == 4 and order_service_val.date < today:
+            rest = today - order_service_val.date
+            if rest.days > 1:
+                multa = total * 0.10 + (total * 0.10 * rest.days / 100)
+            else:
+                multa = total * 0.10
+
         data_order = {
             'id': order_service_val.id,
             'date': str(order_service_val.date),
             'status': order_service_val.status,
             'catalogs': catalog_data,
             'total': total,
+            'multa': multa,
         }
     except Order_Service.DoesNotExist:
         pass
@@ -180,13 +190,27 @@ def change_state(request, pk, status):
         pass
     return JsonResponse(response)
 
-def record(request):
+def record(request, pk=None):
     if 'user' in request.session:
         response = {}
         response['session'] = request.session['user']
         
         try:
-            order_service_values = Order_Service.objects.filter(user_college_id=request.session['user']['id']).order_by('-id')[:10]
+            if pk != None:
+                response['pk'] = pk
+                catalog_list = []
+                service_val = Service.objects.get(id=pk)
+                catalog_values = Catalog_Service.objects.filter(service=service_val, state=True)
+                for catalog in catalog_values:
+                    catalog_list.append(catalog.id)
+                order_values = Order_Catalog.objects.filter(catalog_service_id__in=catalog_list)
+                
+                order_list = []
+                for order in order_values:
+                    order_list.append(order.order_service_id)
+                order_service_values = Order_Service.objects.filter(id__in=order_list).order_by('-id')[:20]
+            else:
+                order_service_values = Order_Service.objects.filter(user_college_id=request.session['user']['id']).order_by('-id')[:10]
             order_service_data = []
             
             for order_service_val in order_service_values:
@@ -197,6 +221,7 @@ def record(request):
                         service_name = order_catalog_val.catalog_service.service.name
                 order_service_data.append({
                     'id': order_service_val.id,
+                    'name': order_service_val.user_college.name,
                     'service': service_name,
                     'date': order_service_val.date,
                     'status': order_service_val.status,

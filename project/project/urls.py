@@ -37,5 +37,6 @@ urlpatterns = [
     path('service/get_order/<int:pk>/', service.get_order),
     path('service/change_state/<int:pk>/<int:status>/', service.change_state),
     path('service/record/', service.record),
+    path('service/record/<int:pk>/', service.record),
     path('service/get_record/<int:pk>/', service.get_records),
 ]

@@ -27,7 +27,13 @@
             <table class="table table-hoverable">
               <thead>
                 <tr>
-                  <th>Servicio</th>
+                  <th>
+                    {% if pk != None %}
+                      Usuario
+                    {% else %}
+                      Servicio
+                    {% endif %}
+                  </th>
                   <th>Fecha</th>
                   <th>Estado</th>
                   <th>Detalle</th>
@@ -36,7 +42,13 @@
               <tbody id="list_accept_order">
                 {% for order in orders %}
                 <tr id="order_{{ order.id }}">
-                  <td>{{ order.service }}</td>
+                  <td>
+                    {% if pk != None %}
+                      {{ order.name }}
+                    {% else %}
+                      {{ order.service }}
+                    {% endif %}
+                  </td>
                   <td>{{ order.date|date:'Y-m-d' }}</td>
                   <td>
                     {% if order.status == 1 %}
@@ -105,6 +117,10 @@
                   
                 </tbody>
               </table>
+
+              <div class="card-inner" id="multa">
+                <h5 style="color: red; float: right;" class="card-padding font-weight-light pb-2 mb-1">Tienes una Multa de: <b id="total_multa">$0</b></h5>
+              </div>
             </div>
           </div>
         </div>
@@ -139,6 +155,14 @@
             $('#list_catalog_order').append(content);
           });
           $('#total_order').text('$'+ data.total);
+
+          if (data.multa != 0) {
+            $('#multa').css('display', 'block');
+            $('#total_multa').text('$'+ data.multa);
+          } else {
+            $('#multa').css('display', 'none');
+          }
+
         }
       });
 
